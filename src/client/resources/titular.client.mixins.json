@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "titular.modid.client.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"client": [
+		"EntityRendererMixin",
+		"PlayerListHudMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
