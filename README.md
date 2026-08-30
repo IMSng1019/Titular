@@ -8,6 +8,9 @@ Titular is a Fabric 1.20.4 visual title system for Java 17. The server owns titl
 - Literal rich-text runs with color, bold, italic, underline, and strikethrough.
 - One inheritance chain per group, extra groups/titles, cycle protection, stable de-duplication.
 - `/titular` selection UI plus administrator and superadministrator management panels.
+- Guided `/titular` landing page with permission-aware title switching, primary-group selection, and superadmin title management.
+- Client-local English/Chinese UI language selection, persisted independently for each player.
+- Rich title editor with independently styled prefix/suffix runs and a live preview centered on the current player's real username.
 - OP 2 / `titular.admin`: change your own primary group.
 - OP 4 / `titular.superadmin`: manage groups, titles, settings, and any online/offline player's fields.
 - Shared formatter for chat display names, entity labels, and Tab entries.
