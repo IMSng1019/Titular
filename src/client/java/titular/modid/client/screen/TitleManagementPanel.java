@@ -2,7 +2,6 @@ package titular.modid.client.screen;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.text.Text;
 import net.minecraft.client.MinecraftClient;
 import titular.modid.client.ClientNetworking;
 import titular.modid.client.ClientText;
