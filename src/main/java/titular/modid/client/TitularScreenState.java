@@ -25,6 +25,11 @@ public record TitularScreenState(long revision, String selectedTitle, Tab tab, P
         this(revision, selectedTitle, tab, Page.HOME);
     }
 
+    /** Convenience constructor for route-focused callers that do not need a tab. */
+    public TitularScreenState(long revision, String selectedTitle, Page page) {
+        this(revision, selectedTitle, Tab.TITLES, page);
+    }
+
     /** Convenience overload for callers that naturally specify the route first. */
     public TitularScreenState(long revision, String selectedTitle, Page page, Tab tab) {
         this(revision, selectedTitle, tab, page);
@@ -67,6 +72,9 @@ public record TitularScreenState(long revision, String selectedTitle, Tab tab, P
         else if (next == Page.MANAGEMENT && !isManagementTab(nextTab)) nextTab = Tab.TITLE_EDITOR;
         return new TitularScreenState(revision, selectedTitle, nextTab, next);
     }
+
+    /** Alias for route used by navigation code that treats this as a transition. */
+    public TitularScreenState withPage(Page target) { return route(target); }
 
     private static boolean isManagementTab(Tab tab) {
         return tab == Tab.PLAYERS || tab == Tab.GROUPS || tab == Tab.TITLE_EDITOR || tab == Tab.SETTINGS;
