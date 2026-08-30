@@ -35,6 +35,8 @@ run/
 
 # java
 
+.worktrees/
+
 hs_err_*.log
 replay_*.log
 *.hprof
