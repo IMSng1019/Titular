@@ -22,30 +22,46 @@ public final class TitleManagementPanel {
 
     public void install(TitularScreen screen, int x, int y) {
         if (!snapshot.canManageAll()) return;
-        TextFieldWidget id = new TextFieldWidget(screen.getTextRenderer(), x, y, 220, 20,
+        boolean wide = screen.viewportWidth() >= 700;
+        int editorWidth = 220;
+        int totalWidth = wide ? editorWidth * 3 + 20 : editorWidth;
+        int origin = screen.centeredPanelX(totalWidth);
+        int idX = screen.centeredPanelX(editorWidth);
+        int prefixX = origin;
+        int previewX = wide ? origin + editorWidth + 10 : origin;
+        int suffixX = wide ? origin + (editorWidth + 10) * 2 : origin;
+        int idY = y;
+        int editorY = wide ? y + 30 : y + 30;
+        int prefixToolbarY = wide ? y + 54 : y + 54;
+        int suffixY = wide ? editorY : y + 94;
+        int suffixToolbarY = wide ? prefixToolbarY : y + 118;
+        int previewY = wide ? editorY : y + 158;
+        int buttonsY = wide ? y + 96 : y + 190;
+
+        TextFieldWidget id = new TextFieldWidget(screen.getTextRenderer(), idX, idY, editorWidth, 20,
                 ClientText.text("titular.screen.title_id"));
         id.setMaxLength(256); screen.addWidget(id);
         StyledTextDocument prefixDocument = new StyledTextDocument();
         StyledTextDocument suffixDocument = new StyledTextDocument();
-        RichTextEditorWidget prefix = new RichTextEditorWidget(screen.getTextRenderer(), x, y + 24, 220, 22,
+        RichTextEditorWidget prefix = new RichTextEditorWidget(screen.getTextRenderer(), prefixX, editorY, editorWidth, 22,
                 prefixDocument, ClientText.text("titular.editor.prefix"));
-        RichTextEditorWidget suffix = new RichTextEditorWidget(screen.getTextRenderer(), x, y + 72, 220, 22,
+        RichTextEditorWidget suffix = new RichTextEditorWidget(screen.getTextRenderer(), suffixX, suffixY, editorWidth, 22,
                 suffixDocument, ClientText.text("titular.editor.suffix"));
         screen.addWidget(prefix); screen.addWidget(suffix);
-        FormattingToolbar prefixToolbar = new FormattingToolbar(x, y + 48, prefixDocument);
-        FormattingToolbar suffixToolbar = new FormattingToolbar(x, y + 96, suffixDocument);
+        FormattingToolbar prefixToolbar = new FormattingToolbar(prefixX, prefixToolbarY, prefixDocument);
+        FormattingToolbar suffixToolbar = new FormattingToolbar(suffixX, suffixToolbarY, suffixDocument);
         screen.addWidget(prefixToolbar); screen.addWidget(suffixToolbar);
         String username = currentUsername();
-        TitlePreviewWidget preview = new TitlePreviewWidget(screen.getTextRenderer(), x, y + 122, 220, 26,
+        TitlePreviewWidget preview = new TitlePreviewWidget(screen.getTextRenderer(), previewX, previewY, editorWidth, 26,
                 prefixDocument, username, suffixDocument);
         screen.addWidget(preview);
         ButtonWidget create = ButtonWidget.builder(ClientText.text("titular.screen.create"), ignored -> send(screen, id, prefixDocument, suffixDocument, true))
-                .dimensions(x, y + 154, 70, 20).build();
+                .dimensions(idX, buttonsY, 70, 20).build();
         ButtonWidget update = ButtonWidget.builder(ClientText.text("titular.screen.update"), ignored -> send(screen, id, prefixDocument, suffixDocument, false))
-                .dimensions(x + 75, y + 154, 70, 20).build();
+                .dimensions(idX + 75, buttonsY, 70, 20).build();
         ButtonWidget delete = ButtonWidget.builder(ClientText.text("titular.screen.delete"), ignored -> {
             if (!id.getText().isBlank()) ClientNetworking.send(TitularRequest.deleteTitle(id.getText().trim(), snapshot.revision()));
-        }).dimensions(x + 150, y + 154, 70, 20).build();
+        }).dimensions(idX + 150, buttonsY, 70, 20).build();
         screen.addWidget(create); screen.addWidget(update); screen.addWidget(delete);
     }
 

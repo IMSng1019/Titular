@@ -59,6 +59,11 @@ public class TitularScreen extends Screen {
 
     public TitularScreenState state() { return state; }
 
+    /** Responsive helpers used by panels that need a wider multi-column layout. */
+    public int viewportWidth() { return width; }
+
+    public int centeredPanelX(int panelWidth) { return panelX(panelWidth); }
+
     public void goHome() { openPage(TitularScreenState.Page.HOME); }
 
     private void rebuild() {

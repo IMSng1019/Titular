@@ -26,5 +26,8 @@ public final class SettingsPanel {
             screen.addWidget(button);
             row += 24;
         }
+        // Language is client-local, but exposing it here keeps the server
+        // settings workspace consistent with the landing-page gear action.
+        new LanguageSettingsPanel().install(screen, x, row + 8);
     }
 }

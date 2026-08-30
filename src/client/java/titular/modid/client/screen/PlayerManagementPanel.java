@@ -4,6 +4,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 import titular.modid.client.ClientNetworking;
+import titular.modid.client.ClientText;
 import titular.modid.model.PlayerTitleState;
 import titular.modid.network.ClientSnapshot;
 import titular.modid.network.TitularRequest;
@@ -19,12 +20,12 @@ public final class PlayerManagementPanel {
 
     public void install(TitularScreen screen, int x, int y) {
         if (!snapshot.canManageAll()) return;
-        TextFieldWidget uuid = field(screen, x, y, 220, "player UUID");
-        TextFieldWidget primary = field(screen, x, y + 24, 220, "primary group");
-        TextFieldWidget groups = field(screen, x, y + 48, 220, "extra groups (comma separated)");
-        TextFieldWidget titles = field(screen, x, y + 72, 220, "extra titles (comma separated)");
-        TextFieldWidget active = field(screen, x, y + 96, 220, "active title");
-        ButtonWidget load = ButtonWidget.builder(Text.translatable("titular.screen.load"), ignored -> {
+        TextFieldWidget uuid = field(screen, x, y, 220, "titular.screen.player_uuid");
+        TextFieldWidget primary = field(screen, x, y + 24, 220, "titular.screen.primary_group");
+        TextFieldWidget groups = field(screen, x, y + 48, 220, "titular.screen.extra_groups");
+        TextFieldWidget titles = field(screen, x, y + 72, 220, "titular.screen.extra_titles");
+        TextFieldWidget active = field(screen, x, y + 96, 220, "titular.screen.active_title");
+        ButtonWidget load = ButtonWidget.builder(ClientText.text("titular.screen.load"), ignored -> {
             try {
                 UUID id = UUID.fromString(uuid.getText().trim());
                 PlayerTitleState state = snapshot.playerStates().get(id);
@@ -36,7 +37,7 @@ public final class PlayerManagementPanel {
             } catch (IllegalArgumentException ignoredException) { }
         }).dimensions(x, y + 120, 106, 20).build();
         screen.addWidget(load);
-        ButtonWidget save = ButtonWidget.builder(Text.translatable("titular.screen.save"), ignored -> {
+        ButtonWidget save = ButtonWidget.builder(ClientText.text("titular.screen.save"), ignored -> {
             try {
                 UUID id = UUID.fromString(uuid.getText().trim());
                 ClientNetworking.sendPlayerFields(id, new TitularRequest.PlayerFields(nullable(primary.getText()), split(groups.getText()),
@@ -46,8 +47,9 @@ public final class PlayerManagementPanel {
         screen.addWidget(save);
     }
 
-    private static TextFieldWidget field(TitularScreen screen, int x, int y, int width, String placeholder) {
-        TextFieldWidget field = new TextFieldWidget(screen.getTextRenderer(), x, y, width, 20, Text.literal(placeholder));
+    private static TextFieldWidget field(TitularScreen screen, int x, int y, int width, String placeholderKey) {
+        TextFieldWidget field = new TextFieldWidget(screen.getTextRenderer(), x, y, width, 20,
+                ClientText.text(placeholderKey));
         field.setMaxLength(1024);
         screen.addWidget(field);
         return field;

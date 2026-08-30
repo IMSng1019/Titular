@@ -17,7 +17,7 @@ public enum LandingAction {
     SWITCH_TITLE(TitularScreenState.Page.TITLE_SWITCH,
             "titular.screen.action.switch_title", PermissionLevel.PLAYER),
     SELECT_PRIMARY_GROUP(TitularScreenState.Page.PRIMARY_GROUP,
-            "titular.screen.action.select_primary_group", PermissionLevel.ADMIN),
+            "titular.screen.action.select_title", PermissionLevel.ADMIN),
     MANAGE_TITLES(TitularScreenState.Page.MANAGEMENT,
             "titular.screen.action.manage_titles", PermissionLevel.SUPERADMIN),
     LANGUAGE(TitularScreenState.Page.LANGUAGE,

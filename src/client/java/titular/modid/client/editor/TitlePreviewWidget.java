@@ -5,6 +5,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
+import titular.modid.client.ClientText;
 
 /**
  * Read-only live preview for a title editor. The username is kept separate
@@ -18,7 +19,7 @@ public final class TitlePreviewWidget extends ClickableWidget {
 
     public TitlePreviewWidget(TextRenderer textRenderer, int x, int y, int width, int height,
                               StyledTextDocument prefix, String username, StyledTextDocument suffix) {
-        super(x, y, width, height, Text.translatable("titular.editor.preview"));
+        super(x, y, width, height, ClientText.text("titular.editor.preview"));
         this.textRenderer = textRenderer;
         this.prefix = prefix;
         this.suffix = suffix;
