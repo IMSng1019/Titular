@@ -1,8 +1,8 @@
-[00:34:16] [Test worker/WARN]: Missing Titular title reference missing-title
-[00:34:16] [Test worker/WARN]: Cycle detected in Titular group inheritance at a-group
-[00:34:16] [Test worker/WARN]: Missing Titular group reference missing-group
-[00:34:16] [Test worker/WARN]: Missing Titular title reference missing-direct
-[00:34:16] [Test worker/ERROR]: Invalid Titular configuration moved from C:\Users\郁小悟~1\AppData\Local\Temp\junit18184289890702643796\titular\groups.json to C:\Users\郁小悟~1\AppData\Local\Temp\junit18184289890702643796\titular\groups.json.broken-1787762056823
+[18:03:25] [Test worker/WARN]: Missing Titular title reference missing-title
+[18:03:25] [Test worker/WARN]: Cycle detected in Titular group inheritance at a-group
+[18:03:25] [Test worker/WARN]: Missing Titular group reference missing-group
+[18:03:25] [Test worker/WARN]: Missing Titular title reference missing-direct
+[18:03:25] [Test worker/ERROR]: Invalid Titular configuration moved from C:\Users\郁小悟~1\AppData\Local\Temp\junit15248512276995117171\titular\groups.json to C:\Users\郁小悟~1\AppData\Local\Temp\junit15248512276995117171\titular\groups.json.broken-1788084205314
 java.lang.IllegalArgumentException: parent is too long
 	at titular.modid.storage.TitularJsonCodec.requiredString(TitularJsonCodec.java:196) ~[main/:?]
 	at titular.modid.storage.TitularJsonCodec.optionalString(TitularJsonCodec.java:181) ~[main/:?]
@@ -92,7 +92,7 @@ java.lang.IllegalArgumentException: parent is too long
 	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:72) ~[?:?]
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69) ~[gradle-worker.jar:?]
 	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74) ~[gradle-worker.jar:?]
-[00:34:16] [Test worker/ERROR]: Invalid Titular configuration moved from C:\Users\郁小悟~1\AppData\Local\Temp\junit7163134737225834854\titular\groups.json to C:\Users\郁小悟~1\AppData\Local\Temp\junit7163134737225834854\titular\groups.json.broken-1787762056863
+[18:03:25] [Test worker/ERROR]: Invalid Titular configuration moved from C:\Users\郁小悟~1\AppData\Local\Temp\junit10171924621777459416\titular\groups.json to C:\Users\郁小悟~1\AppData\Local\Temp\junit10171924621777459416\titular\groups.json.broken-1788084205355
 java.lang.IllegalArgumentException: Invalid groups JSON
 	at titular.modid.storage.TitularJsonCodec.object(TitularJsonCodec.java:146) ~[main/:?]
 	at titular.modid.storage.TitularJsonCodec.decodeGroups(TitularJsonCodec.java:71) ~[main/:?]
