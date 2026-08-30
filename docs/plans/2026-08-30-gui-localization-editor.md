@@ -163,4 +163,3 @@ Run: `git diff --check` and review `git status --short`. Confirm no server packe
 **Step 4: Smoke-test the interaction**
 
 Run a development client/server pair and verify `/titular` opens HOME, each permission sees the correct actions, locale changes immediately and survives restart, primary-group selection changes the available title list, and the editor shows the real player name with independently styled prefix/suffix.
-
