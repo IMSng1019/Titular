@@ -23,6 +23,10 @@ public enum LandingAction {
     LANGUAGE(TitularScreenState.Page.LANGUAGE,
             "titular.screen.action.language", PermissionLevel.PLAYER);
 
+    /** Compatibility aliases matching the wording used by the UI spec. */
+    public static final LandingAction SELECT_TITLE = SELECT_PRIMARY_GROUP;
+    public static final LandingAction SET_TITLE = MANAGE_TITLES;
+
     private final TitularScreenState.Page page;
     private final String labelKey;
     private final PermissionLevel requiredPermission;

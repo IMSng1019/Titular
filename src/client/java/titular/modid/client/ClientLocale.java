@@ -7,6 +7,10 @@ public enum ClientLocale {
     EN_US("en_us", "English"),
     ZH_CN("zh_cn", "中文");
 
+    /** Readable aliases for callers that describe locales by language. */
+    public static final ClientLocale ENGLISH = EN_US;
+    public static final ClientLocale CHINESE = ZH_CN;
+
     private final String id;
     private final String displayName;
 
