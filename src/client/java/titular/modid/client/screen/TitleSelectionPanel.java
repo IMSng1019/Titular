@@ -3,6 +3,7 @@ package titular.modid.client.screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import titular.modid.client.ClientNetworking;
+import titular.modid.client.ClientText;
 import titular.modid.network.ClientSnapshot;
 
 /** Player-facing title selection controls. */
@@ -25,7 +26,7 @@ public final class TitleSelectionPanel {
             screen.addWidget(button);
             row += 24;
         }
-        ButtonWidget clear = ButtonWidget.builder(Text.translatable("titular.screen.clear"),
+        ButtonWidget clear = ButtonWidget.builder(ClientText.text("titular.screen.clear"),
                 ignored -> ClientNetworking.sendClear()).dimensions(x, row, 220, 20).build();
         clear.active = selected != null;
         screen.addWidget(clear);

@@ -7,6 +7,7 @@ import titular.modid.model.PermissionLevel;
 import titular.modid.model.PlayerTitleState;
 import titular.modid.network.ClientSnapshot;
 import titular.modid.network.TitularRequest;
+import titular.modid.client.screen.LandingAction;
 
 import java.util.List;
 import java.util.UUID;
@@ -55,6 +56,34 @@ class TitularScreenStateTest {
     void noActiveTitleDoesNotPreselectTheFirstAvailableTitle() {
         ClientSnapshot snapshot = snapshot(5, List.of("one", "two"), null);
         assertNull(TitularScreenState.from(snapshot, null).selectedTitle());
+    }
+
+    @Test
+    void landingActionsAreProjectedByPermission() {
+        assertEquals(List.of(LandingAction.SWITCH_TITLE, LandingAction.LANGUAGE),
+                TitularScreenState.actions(PermissionLevel.PLAYER));
+        assertEquals(List.of(LandingAction.SWITCH_TITLE, LandingAction.SELECT_PRIMARY_GROUP,
+                        LandingAction.LANGUAGE),
+                TitularScreenState.actions(PermissionLevel.ADMIN));
+        assertEquals(List.of(LandingAction.SWITCH_TITLE, LandingAction.SELECT_PRIMARY_GROUP,
+                        LandingAction.MANAGE_TITLES, LandingAction.LANGUAGE),
+                TitularScreenState.actions(PermissionLevel.SUPERADMIN));
+    }
+
+    @Test
+    void routeStartsAtHomeAndSurvivesSnapshotRevisionChanges() {
+        ClientSnapshot first = snapshot(1, List.of("red", "blue"), "blue");
+        TitularScreenState state = TitularScreenState.from(first, null);
+        assertEquals(TitularScreenState.Page.HOME, state.page());
+        state = state.route(TitularScreenState.Page.TITLE_SWITCH);
+        assertEquals(TitularScreenState.Page.TITLE_SWITCH, state.page());
+        assertEquals(TitularScreenState.Tab.TITLES, state.tab());
+
+        ClientSnapshot next = snapshot(2, List.of("blue", "green"), "green");
+        TitularScreenState retained = TitularScreenState.from(next, state);
+        assertEquals(TitularScreenState.Page.TITLE_SWITCH, retained.page());
+        assertEquals(TitularScreenState.Tab.TITLES, retained.tab());
+        assertEquals("blue", retained.selectedTitle());
     }
 
     private static ClientSnapshot snapshot(long revision, List<String> titles, String active) {

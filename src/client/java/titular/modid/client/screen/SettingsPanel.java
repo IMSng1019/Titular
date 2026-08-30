@@ -3,6 +3,7 @@ package titular.modid.client.screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import titular.modid.client.ClientNetworking;
+import titular.modid.client.ClientText;
 import titular.modid.model.DisplayMode;
 import titular.modid.network.ClientSnapshot;
 
@@ -17,7 +18,9 @@ public final class SettingsPanel {
         int row = y;
         for (DisplayMode mode : DisplayMode.values()) {
             int buttonY = row;
-            ButtonWidget button = ButtonWidget.builder(Text.literal((mode == snapshot.mode() ? "* " : "") + mode.name()),
+            Text label = Text.literal(mode == snapshot.mode() ? "* " : "")
+                    .append(ClientText.text("titular.screen.server_display_mode." + mode.name().toLowerCase()));
+            ButtonWidget button = ButtonWidget.builder(label,
                     ignored -> ClientNetworking.sendDisplayMode(mode)).dimensions(x, buttonY, 220, 20).build();
             button.active = mode != snapshot.mode();
             screen.addWidget(button);

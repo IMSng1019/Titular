@@ -3,13 +3,32 @@ package titular.modid.client;
 import titular.modid.model.PermissionLevel;
 import titular.modid.network.ClientSnapshot;
 import titular.modid.network.TitularRequest;
+import titular.modid.client.screen.LandingAction;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /** Pure projection and request helpers shared by the client screen and tests. */
-public record TitularScreenState(long revision, String selectedTitle, Tab tab) {
+public record TitularScreenState(long revision, String selectedTitle, Tab tab, Page page) {
     public enum Tab { TITLES, SELF_GROUP, PLAYERS, GROUPS, TITLE_EDITOR, SETTINGS }
+
+    /** Top-level routes exposed by the guided screen. */
+    public enum Page { HOME, TITLE_SWITCH, PRIMARY_GROUP, MANAGEMENT, LANGUAGE }
+
+    public TitularScreenState {
+        tab = tab == null ? Tab.TITLES : tab;
+        page = page == null ? Page.HOME : page;
+    }
+
+    /** Compatibility constructor retained for callers of the original state model. */
+    public TitularScreenState(long revision, String selectedTitle, Tab tab) {
+        this(revision, selectedTitle, tab, Page.HOME);
+    }
+
+    /** Convenience overload for callers that naturally specify the route first. */
+    public TitularScreenState(long revision, String selectedTitle, Page page, Tab tab) {
+        this(revision, selectedTitle, tab, page);
+    }
 
     public static List<Tab> tabs(PermissionLevel level) {
         List<Tab> result = new ArrayList<>();
@@ -21,8 +40,40 @@ public record TitularScreenState(long revision, String selectedTitle, Tab tab) {
         return List.copyOf(result);
     }
 
+    /** Returns the stable, permission-filtered actions for the landing page. */
+    public static List<LandingAction> actions(PermissionLevel level) {
+        return LandingAction.visible(level);
+    }
+
+    /** Alias retained for UI callers that describe this as a landing projection. */
+    public static List<LandingAction> landingActions(PermissionLevel level) {
+        return actions(level);
+    }
+
+    public static boolean pageAllowed(Page page, PermissionLevel level) {
+        if (page == null || page == Page.HOME || page == Page.LANGUAGE || page == Page.TITLE_SWITCH) return true;
+        PermissionLevel effective = level == null ? PermissionLevel.PLAYER : level;
+        return page == Page.PRIMARY_GROUP
+                ? effective.includes(PermissionLevel.ADMIN)
+                : page == Page.MANAGEMENT && effective == PermissionLevel.SUPERADMIN;
+    }
+
+    /** Returns a copy routed to the supplied page while retaining title/tab state. */
+    public TitularScreenState route(Page target) {
+        Page next = target == null ? Page.HOME : target;
+        Tab nextTab = tab;
+        if (next == Page.TITLE_SWITCH) nextTab = Tab.TITLES;
+        else if (next == Page.PRIMARY_GROUP) nextTab = Tab.SELF_GROUP;
+        else if (next == Page.MANAGEMENT && !isManagementTab(nextTab)) nextTab = Tab.TITLE_EDITOR;
+        return new TitularScreenState(revision, selectedTitle, nextTab, next);
+    }
+
+    private static boolean isManagementTab(Tab tab) {
+        return tab == Tab.PLAYERS || tab == Tab.GROUPS || tab == Tab.TITLE_EDITOR || tab == Tab.SETTINGS;
+    }
+
     public static TitularScreenState from(ClientSnapshot snapshot, TitularScreenState previous) {
-        if (snapshot == null) return new TitularScreenState(-1L, null, Tab.TITLES);
+        if (snapshot == null) return new TitularScreenState(-1L, null, Tab.TITLES, Page.HOME);
         String selected = previous == null ? null : previous.selectedTitle();
         if (selected == null || !snapshot.availableTitleIds().contains(selected)) {
             selected = snapshot.self() == null ? null : snapshot.self().activeTitle();
@@ -30,7 +81,9 @@ public record TitularScreenState(long revision, String selectedTitle, Tab tab) {
         }
         Tab tab = previous == null ? Tab.TITLES : previous.tab();
         if (!tabs(snapshot.permissionLevel()).contains(tab)) tab = Tab.TITLES;
-        return new TitularScreenState(snapshot.revision(), selected, tab);
+        Page page = previous == null ? Page.HOME : previous.page();
+        if (!pageAllowed(page, snapshot.permissionLevel())) page = Page.HOME;
+        return new TitularScreenState(snapshot.revision(), selected, tab, page);
     }
 
     public static TitularRequest activateRequest(ClientSnapshot snapshot, String titleId) {
