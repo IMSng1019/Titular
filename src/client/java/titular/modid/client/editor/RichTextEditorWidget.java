@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
+import titular.modid.client.ClientText;
 
 /** Reusable, single-line styled literal-text editor. */
 public class RichTextEditorWidget extends ClickableWidget {
@@ -18,7 +19,12 @@ public class RichTextEditorWidget extends ClickableWidget {
 
     public RichTextEditorWidget(TextRenderer textRenderer, int x, int y, int width, int height,
                                 StyledTextDocument document) {
-        super(x, y, width, height, Text.translatable("titular.editor"));
+        this(textRenderer, x, y, width, height, document, ClientText.text("titular.editor"));
+    }
+
+    public RichTextEditorWidget(TextRenderer textRenderer, int x, int y, int width, int height,
+                                StyledTextDocument document, Text message) {
+        super(x, y, width, height, message == null ? ClientText.text("titular.editor") : message);
         this.textRenderer = textRenderer;
         this.document = document;
         this.active = true;
@@ -41,8 +47,14 @@ public class RichTextEditorWidget extends ClickableWidget {
             context.fill(selectionLeft, getY() + 2, selectionRight,
                     getBottom() - 2, 0x804080C0);
         }
-        context.drawTextWithShadow(textRenderer, document.toText(), getX() + 4 - scrollX,
-                getY() + (getHeight() - textRenderer.fontHeight) / 2, 0xFFFFFFFF);
+        Text value = document.toText();
+        if (document.text().isEmpty() && !isFocused()) {
+            context.drawTextWithShadow(textRenderer, getMessage(), getX() + 4 - scrollX,
+                    getY() + (getHeight() - textRenderer.fontHeight) / 2, 0xFF8D96A5);
+        } else {
+            context.drawTextWithShadow(textRenderer, value, getX() + 4 - scrollX,
+                    getY() + (getHeight() - textRenderer.fontHeight) / 2, 0xFFFFFFFF);
+        }
         if (isFocused() && !document.hasSelection()) {
             int caretX = getX() + 4 + measureUntil(document.caret()) - scrollX;
             context.fill(caretX, getY() + 2, caretX + 1, getBottom() - 2, 0xFFFFFFFF);

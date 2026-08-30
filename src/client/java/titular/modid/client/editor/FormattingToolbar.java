@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import titular.modid.client.ClientText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +15,12 @@ import java.util.function.Consumer;
 
 /** Compact toolbar that applies the editor's supported visual styles. */
 public final class FormattingToolbar extends ClickableWidget {
+    private static final int CELL = 18;
+    private static final int COLUMNS = 11;
     private final List<ButtonWidget> buttons = new ArrayList<>();
 
     public FormattingToolbar(int x, int y, StyledTextDocument document) {
-        super(x, y, 18 * 21, 20, Text.translatable("titular.editor.toolbar"));
+        super(x, y, CELL * COLUMNS, CELL * 2, ClientText.text("titular.editor.toolbar"));
         int offset = 0;
         for (Formatting color : Formatting.values()) {
             if (!color.isColor()) continue;
@@ -28,22 +31,23 @@ public final class FormattingToolbar extends ClickableWidget {
         addButton("U", "titular.editor.underline", offset++, document::toggleUnderline);
         addButton("S", "titular.editor.strikethrough", offset++, document::toggleStrikethrough);
         addButton("R", "titular.editor.reset", offset, document::resetStyle);
-        setWidth(Math.max(18, offset * 18 + 18));
+        setWidth(CELL * COLUMNS);
+        setHeight(CELL * ((buttons.size() + COLUMNS - 1) / COLUMNS));
     }
 
     private void addColorButton(StyledTextDocument document, Formatting color, int offset) {
         Text label = Text.literal("■").formatted(color);
         ButtonWidget button = ButtonWidget.builder(label, ignored -> document.applyColor(color))
-                .dimensions(getX() + offset * 18, getY(), 18, 20)
-                .tooltip(Tooltip.of(Text.translatable("titular.editor.color." + color.getName())))
+                .dimensions(getX() + column(offset), getY() + row(offset), CELL, 20)
+                .tooltip(Tooltip.of(ClientText.text("titular.editor.color." + color.getName())))
                 .build();
         buttons.add(button);
     }
 
     private void addButton(String label, String tooltipKey, int offset, Runnable action) {
         ButtonWidget button = ButtonWidget.builder(Text.literal(label), ignored -> action.run())
-                .dimensions(getX() + offset * 18, getY(), 18, 20)
-                .tooltip(Tooltip.of(Text.translatable(tooltipKey)))
+                .dimensions(getX() + column(offset), getY() + row(offset), CELL, 20)
+                .tooltip(Tooltip.of(ClientText.text(tooltipKey)))
                 .build();
         buttons.add(button);
     }
@@ -91,9 +95,13 @@ public final class FormattingToolbar extends ClickableWidget {
 
     private void syncChildPositions() {
         for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).setPosition(getX() + i * 18, getY());
+            buttons.get(i).setPosition(getX() + column(i), getY() + row(i));
         }
     }
+
+    private static int column(int index) { return (index % COLUMNS) * CELL; }
+
+    private static int row(int index) { return (index / COLUMNS) * CELL; }
 
     @Override
     public void forEachChild(Consumer<ClickableWidget> consumer) {

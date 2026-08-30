@@ -27,8 +27,10 @@ public final class TitleManagementPanel {
         id.setMaxLength(256); screen.addWidget(id);
         StyledTextDocument prefixDocument = new StyledTextDocument();
         StyledTextDocument suffixDocument = new StyledTextDocument();
-        RichTextEditorWidget prefix = new RichTextEditorWidget(screen.getTextRenderer(), x, y + 24, 220, 22, prefixDocument);
-        RichTextEditorWidget suffix = new RichTextEditorWidget(screen.getTextRenderer(), x, y + 72, 220, 22, suffixDocument);
+        RichTextEditorWidget prefix = new RichTextEditorWidget(screen.getTextRenderer(), x, y + 24, 220, 22,
+                prefixDocument, ClientText.text("titular.editor.prefix"));
+        RichTextEditorWidget suffix = new RichTextEditorWidget(screen.getTextRenderer(), x, y + 72, 220, 22,
+                suffixDocument, ClientText.text("titular.editor.suffix"));
         screen.addWidget(prefix); screen.addWidget(suffix);
         FormattingToolbar prefixToolbar = new FormattingToolbar(x, y + 48, prefixDocument);
         FormattingToolbar suffixToolbar = new FormattingToolbar(x, y + 96, suffixDocument);
@@ -37,7 +39,7 @@ public final class TitleManagementPanel {
         TitlePreviewWidget preview = new TitlePreviewWidget(screen.getTextRenderer(), x, y + 122, 220, 26,
                 prefixDocument, username, suffixDocument);
         screen.addWidget(preview);
-        ButtonWidget create = ButtonWidget.builder(Text.translatable("titular.screen.create"), ignored -> send(screen, id, prefixDocument, suffixDocument, true))
+        ButtonWidget create = ButtonWidget.builder(ClientText.text("titular.screen.create"), ignored -> send(screen, id, prefixDocument, suffixDocument, true))
                 .dimensions(x, y + 154, 70, 20).build();
         ButtonWidget update = ButtonWidget.builder(ClientText.text("titular.screen.update"), ignored -> send(screen, id, prefixDocument, suffixDocument, false))
                 .dimensions(x + 75, y + 154, 70, 20).build();
