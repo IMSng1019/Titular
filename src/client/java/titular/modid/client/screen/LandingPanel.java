@@ -31,7 +31,7 @@ public final class LandingPanel {
         }
         // Keep local settings available without taking space from the primary
         // workflow; the familiar gear icon also has a translated tooltip.
-        ButtonWidget language = ButtonWidget.builder(Text.literal("⚙"),
+        ButtonWidget language = ButtonWidget.builder(Text.literal("\u2699"),
                         ignored -> screen.openPage(LandingAction.LANGUAGE.page()))
                 .dimensions(x + 196, y - 30, 24, 24)
                 .tooltip(Tooltip.of(ClientText.text(LandingAction.LANGUAGE.labelKey())))
