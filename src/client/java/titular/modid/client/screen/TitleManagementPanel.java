@@ -10,6 +10,7 @@ import titular.modid.client.editor.RichTextEditorWidget;
 import titular.modid.client.editor.StyledTextDocument;
 import titular.modid.client.editor.FormattingToolbar;
 import titular.modid.client.editor.TitlePreviewWidget;
+import titular.modid.client.editor.TitlePreview;
 import titular.modid.model.TitleDefinition;
 import titular.modid.network.ClientSnapshot;
 import titular.modid.network.TitularRequest;
@@ -51,7 +52,9 @@ public final class TitleManagementPanel {
         FormattingToolbar prefixToolbar = new FormattingToolbar(prefixX, prefixToolbarY, prefixDocument);
         FormattingToolbar suffixToolbar = new FormattingToolbar(suffixX, suffixToolbarY, suffixDocument);
         screen.addWidget(prefixToolbar); screen.addWidget(suffixToolbar);
-        String username = currentUsername();
+        java.util.UUID target = snapshot.self() == null ? null : snapshot.self().playerId();
+        String username = TitlePreview.resolveUsername(snapshot, target, currentUsername(),
+                target == null ? "username" : target.toString());
         TitlePreviewWidget preview = new TitlePreviewWidget(screen.getTextRenderer(), previewX, previewY, editorWidth, 26,
                 prefixDocument, username, suffixDocument);
         screen.addWidget(preview);

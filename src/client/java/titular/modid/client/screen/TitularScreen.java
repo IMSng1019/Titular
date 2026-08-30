@@ -59,6 +59,16 @@ public class TitularScreen extends Screen {
 
     public TitularScreenState state() { return state; }
 
+    @Override
+    public Text getTitle() {
+        // Screen.title is final and captures the constructor locale; expose a
+        // dynamic value so narration follows an in-place locale change.
+        return ClientText.text("titular.screen.title");
+    }
+
+    @Override
+    public Text getNarratedTitle() { return getTitle(); }
+
     /** Responsive helpers used by panels that need a wider multi-column layout. */
     public int viewportWidth() { return width; }
 
