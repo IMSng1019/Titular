@@ -100,12 +100,14 @@ public class TitularScreen extends Screen {
                 TitularScreenState.Tab.TITLE_EDITOR,
                 TitularScreenState.Tab.SETTINGS
         };
-        int buttonWidth = Math.max(68, Math.min(118, (width - 24) / managementTabs.length - 4));
-        int total = buttonWidth * managementTabs.length + 4 * (managementTabs.length - 1);
+        int gap = 4;
+        int buttonWidth = Math.max(44, Math.min(118,
+                (width - 16 - gap * (managementTabs.length - 1)) / managementTabs.length));
+        int total = buttonWidth * managementTabs.length + gap * (managementTabs.length - 1);
         int startX = Math.max(8, (width - total) / 2);
         for (int index = 0; index < managementTabs.length; index++) {
             TitularScreenState.Tab target = managementTabs[index];
-            int buttonX = startX + index * (buttonWidth + 4);
+            int buttonX = startX + index * (buttonWidth + gap);
             ButtonWidget button = ButtonWidget.builder(
                             ClientText.text("titular.screen.tab." + target.name().toLowerCase()),
                             ignored -> setTab(target, true))
